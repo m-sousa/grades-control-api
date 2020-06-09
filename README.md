@@ -6,7 +6,7 @@ Desafio do módulo 02 do Bootcamp Online - Desenvolvedor Full Stack do IGTI.
 
 Desenvolver uma API chamada “grades-control-api” para controlar notas de alunos em matérias de um curso.
 
-Atividades
+### Atividades
 
 O desafio final consiste em desenvolver uma API chamada “grades-control-api” para controlar notas de alunos em matérias de um curso. Você deverá desenvolver endpoints para criação, atualização, exclusão e consulta de notas, aqui chamadas de grades. As grades deverão ser salvas em um arquivo json, chamado “grades.json”. Esse arquivo será previamente fornecido e seus endpoints devem atuar considerando os registros já existentes.
 
