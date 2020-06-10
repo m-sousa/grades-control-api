@@ -5,7 +5,7 @@
   "main": "src/server.js",
   "type": "module",
   "scripts": {
-    "dev": "nodemon --experimental-modules src/server.js"
+    "dev": "nodemon --ignore 'src/database/' --experimental-modules src/server.js"
   },
   "repository": {
     "type": "git",

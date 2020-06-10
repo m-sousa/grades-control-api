@@ -4,6 +4,7 @@ import path from "path";
 
 const routes = express.Router();
 const { readFile, writeFile } = promises;
+const databaseFilePath = "src/database/grades.json";
 
 // routes.get("/", (request, response) => {
 //   return response.send("Hello world");
@@ -28,7 +29,7 @@ routes.post("/", async (request, response) => {
     gradesFile.grades.push(newGrade);
     gradesFile.nextId += 1;
 
-    await writeFile("src/database/grades.json", JSON.stringify(gradesFile));
+    await writeFile(databaseFilePath, JSON.stringify(gradesFile));
 
     response.json(newGrade);
   } catch (error) {
@@ -52,8 +53,26 @@ routes.put("/", async (request, response) => {
     gradesFile.grades[index].type = type;
     gradesFile.grades[index].value = value;
 
-    await writeFile("src/database/grades.json", JSON.stringify(gradesFile));
+    await writeFile(databaseFilePath, JSON.stringify(gradesFile));
 
+    response.end();
+  } catch (error) {
+    return response.status(400).send({ error: error.message });
+  }
+});
+
+// Atividade 03
+routes.delete("/:id", async (request, response) => {
+  try {
+    const id = Number(request.params.id);
+    let gradesFile = await loadGrades();
+    const selectedGrade = gradesFile.grades.find((grade) => grade.id === id);
+
+    if (!selectedGrade) return response.status(404).send("Not found");
+
+    gradesFile.grades = gradesFile.grades.filter((grade) => grade.id !== id);
+
+    await writeFile(databaseFilePath, JSON.stringify(gradesFile));
     response.end();
   } catch (error) {
     return response.status(400).send({ error: error.message });
@@ -77,7 +96,7 @@ routes.get("/:id", async (request, response) => {
 
 async function loadGrades() {
   try {
-    const response = await readFile(path.resolve("src/database/grades.json"));
+    const response = await readFile(path.resolve(databaseFilePath));
     const data = JSON.parse(response);
     return data;
   } catch (error) {
