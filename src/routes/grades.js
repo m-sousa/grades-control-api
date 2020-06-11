@@ -80,7 +80,7 @@ routes.delete("/:id", async (request, response) => {
 });
 
 // Atividade 05
-routes.get("/sum", async (request, response) => {
+routes.get("/sum/", async (request, response) => {
   try {
     const { student, subject } = request.query;
     const gradesFile = await loadGrades();
@@ -91,6 +91,26 @@ routes.get("/sum", async (request, response) => {
       }, 0);
 
     response.send({ value: sumOfGrades });
+  } catch (error) {
+    return response.status(400).send({ error: error.message });
+  }
+});
+
+// Atividade 06
+routes.get("/average/", async (request, response) => {
+  try {
+    const { subject, type } = request.query;
+    const gradesFile = await loadGrades();
+
+    const filteredGrades = gradesFile.grades.filter(
+      (grade) => grade.subject === subject && grade.type === type
+    );
+
+    const filteredGradesAverage =
+      filteredGrades.reduce((acc, cur) => acc + cur.value, 0) /
+      filteredGrades.length;
+
+    response.send({ value: filteredGradesAverage });
   } catch (error) {
     return response.status(400).send({ error: error.message });
   }
