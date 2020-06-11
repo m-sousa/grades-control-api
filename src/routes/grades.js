@@ -80,7 +80,7 @@ routes.delete("/:id", async (request, response) => {
 });
 
 // Atividade 05
-routes.get("/sum/", async (request, response) => {
+routes.get("/sum", async (request, response) => {
   try {
     const { student, subject } = request.query;
     const gradesFile = await loadGrades();
@@ -90,14 +90,14 @@ routes.get("/sum/", async (request, response) => {
         return acc + cur.value;
       }, 0);
 
-    response.send({ value: sumOfGrades });
+    response.json({ value: sumOfGrades });
   } catch (error) {
     return response.status(400).send({ error: error.message });
   }
 });
 
 // Atividade 06
-routes.get("/average/", async (request, response) => {
+routes.get("/average", async (request, response) => {
   try {
     const { subject, type } = request.query;
     const gradesFile = await loadGrades();
@@ -110,7 +110,24 @@ routes.get("/average/", async (request, response) => {
       filteredGrades.reduce((acc, cur) => acc + cur.value, 0) /
       filteredGrades.length;
 
-    response.send({ value: filteredGradesAverage });
+    response.json({ value: filteredGradesAverage });
+  } catch (error) {
+    return response.status(400).send({ error: error.message });
+  }
+});
+
+// Atividade 07
+routes.get("/top", async (request, response) => {
+  try {
+    const { subject, type } = request.query;
+    const gradesFile = await loadGrades();
+
+    const filteredGrades = gradesFile.grades
+      .filter((grade) => grade.subject === subject && grade.type === type)
+      .sort((a, b) => b.value - a.value)
+      .slice(0, 3);
+
+    response.json(filteredGrades);
   } catch (error) {
     return response.status(400).send({ error: error.message });
   }
